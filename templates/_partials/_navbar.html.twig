@@ -1,0 +1,63 @@
+{% set route = app.request.attributes.get('_route') ?? '' %}
+{% macro lien(nom, route_cible, prefixe, icone, route) %}
+    <li class="nav-item">
+        <a class="nav-link {{ route starts with prefixe ? 'active' }}" href="{{ path(route_cible) }}">
+            <i class="bi bi-{{ icone }}"></i> {{ nom }}
+        </a>
+    </li>
+{% endmacro %}
+{% import _self as nav %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" href="{{ path('app_home') }}"><i class="bi bi-book-half"></i> Bibliothèque</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false" aria-label="Ouvrir le menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu-principal">
+            <ul class="navbar-nav me-auto">
+                {{ nav.lien('Livres', 'app_livre_index', 'app_livre', 'book', route) }}
+                {{ nav.lien('Auteurs', 'app_auteur_index', 'app_auteur', 'person-lines-fill', route) }}
+                {{ nav.lien('Catégories', 'app_category_index', 'app_category', 'tags', route) }}
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ nav.lien('Emprunts', 'app_emprunt_index', 'app_emprunt', 'arrow-left-right', route) }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ route starts with 'app_adherent' or route starts with 'app_editeur' or route starts with 'app_tableau' ? 'active' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear"></i> Administration
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_tableau_de_bord') }}"><i class="bi bi-speedometer2"></i> Tableau de bord</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_adherent_index') }}"><i class="bi bi-people"></i> Adhérents</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_editeur_index') }}"><i class="bi bi-building"></i> Éditeurs</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('admin') }}"><i class="bi bi-database-gear"></i> Back-office EasyAdmin</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <form class="d-flex me-lg-3 my-2 my-lg-0" role="search" action="{{ path('app_livre_index') }}" method="get">
+                <input class="form-control form-control-sm" type="search" name="q" placeholder="Titre, auteur, catégorie…" aria-label="Rechercher un livre" value="{{ app.request.query.get('q') }}">
+            </form>
+
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    {{ nav.lien('Mes emprunts', 'app_mes_emprunts', 'app_mes_emprunts', 'journal-bookmark', route) }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> {{ app.user.prenom }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><span class="dropdown-item-text small text-body-secondary">{{ app.user.email }}<br>{{ is_granted('ROLE_ADMIN') ? 'Bibliothécaire' : 'Adhérent' }}</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    {{ nav.lien('Connexion', 'app_login', 'app_login', 'box-arrow-in-right', route) }}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adhérents{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0"><i class="bi bi-people"></i> Adhérents</h1>
+    <a href="{{ path('app_adherent_new') }}" class="btn btn-primary"><i class="bi bi-person-plus"></i> Nouvel adhérent</a>
+</div>
+
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>Nom</th><th>Email</th><th>Rôle</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for adherent in adherents %}
+            <tr>
+                <td><a href="{{ path('app_adherent_show', {id: adherent.id}) }}" class="text-decoration-none fw-semibold">{{ adherent.nom|upper }} {{ adherent.prenom }}</a></td>
+                <td>{{ adherent.email }}</td>
+                <td>
+                    {% if adherent.admin %}
+                        <span class="badge text-bg-warning">Bibliothécaire</span>
+                    {% else %}
+                        <span class="badge text-bg-light border">Adhérent</span>
+                    {% endif %}
+                </td>
+                <td class="text-end text-nowrap">
+                    <a href="{{ path('app_adherent_show', {id: adherent.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir"><i class="bi bi-eye"></i></a>
+                    <a href="{{ path('app_adherent_edit', {id: adherent.id}) }}" class="btn btn-sm btn-outline-primary" title="Modifier"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4" class="text-center text-body-secondary py-4">Aucun adhérent.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

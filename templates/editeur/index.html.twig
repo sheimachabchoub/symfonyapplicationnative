@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editeur index{% endblock %}
+
+{% block body %}
+    <h1>Editeur index</h1>
+
+    <table class="table table-hover bg-white shadow-sm">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NomEditeur</th>
+                <th>Pays</th>
+                <th>Adresse</th>
+                <th>Telephone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for editeur in editeurs %}
+            <tr>
+                <td>{{ editeur.id }}</td>
+                <td>{{ editeur.nomEditeur }}</td>
+                <td>{{ editeur.pays }}</td>
+                <td>{{ editeur.adresse }}</td>
+                <td>{{ editeur.telephone }}</td>
+                <td>
+                    <a href="{{ path('app_editeur_show', {'id': editeur.id}) }}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('app_editeur_edit', {'id': editeur.id}) }}" class="btn btn-sm btn-outline-primary">Modifier</a>{% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucun élément</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('app_editeur_new') }}" class="btn btn-primary">Ajouter</a>{% endif %}
+{% endblock %}

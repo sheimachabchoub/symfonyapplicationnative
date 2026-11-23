@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exercice DQL{% endblock %}
+
+{% block body %}
+    <h1 class="h4">Exercice : prix &gt; 20, pages &lt; 300, triés par prix (10 max)</h1>
+    <table class="table table-sm bg-white">
+        <thead><tr><th>Id</th><th>Titre</th><th>Pages</th><th>Prix</th></tr></thead>
+        <tbody>
+        {% for livre in livres %}
+            <tr><td>{{ livre.id }}</td><td>{{ livre.titre }}</td><td>{{ livre.nbPages }}</td><td>{{ livre.prix }}</td></tr>
+        {% else %}
+            <tr><td colspan="4">Aucun résultat</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

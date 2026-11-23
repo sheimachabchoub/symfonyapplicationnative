@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes emprunts{% endblock %}
+
+{% block body %}
+<h1 class="h3 mb-3"><i class="bi bi-journal-bookmark"></i> Mes emprunts</h1>
+
+<div class="alert {{ restants > 0 ? 'alert-info' : 'alert-warning' }}">
+    Vous avez {{ enCours|length }} emprunt{{ enCours|length > 1 ? 's' }} en cours sur {{ max }} autorisés.
+    {% if restants == 0 %}Rendez un livre avant d'en emprunter un autre.{% endif %}
+</div>
+
+<h2 class="h5 mt-4">En cours</h2>
+<div class="row row-cols-1 row-cols-md-2 g-3">
+    {% for emprunt in enCours %}
+        <div class="col">
+            <div class="card h-100 shadow-sm {{ emprunt.enRetard(aujourdhui) ? 'border-danger' }}">
+                <div class="card-body">
+                    <h3 class="h6"><a href="{{ path('app_livre_show', {id: emprunt.livre.id}) }}" class="text-decoration-none">{{ emprunt.livre.titre }}</a></h3>
+                    <p class="small mb-2">Emprunté le {{ emprunt.dateEmprunt|date('d/m/Y') }} · à rendre avant le <strong>{{ emprunt.dateRetourPrevue|date('d/m/Y') }}</strong></p>
+                    {{ include('_partials/_statut_emprunt.html.twig') }}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-body-secondary">Aucun emprunt en cours.</p>
+    {% endfor %}
+</div>
+
+{% if rendus is not empty %}
+    <h2 class="h5 mt-4">Historique</h2>
+    <ul class="list-group shadow-sm">
+        {% for emprunt in rendus %}
+            <li class="list-group-item d-flex justify-content-between">
+                <span>{{ emprunt.livre.titre }}</span>
+                <small class="text-body-secondary">{{ emprunt.dateEmprunt|date('d/m/Y') }} → {{ emprunt.dateRetourReelle|date('d/m/Y') }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

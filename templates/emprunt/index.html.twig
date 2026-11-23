@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunts{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0"><i class="bi bi-arrow-left-right"></i> Emprunts</h1>
+    <a href="{{ path('app_emprunt_new') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nouvel emprunt</a>
+</div>
+
+<ul class="nav nav-pills mb-3">
+    {% for cle, libelle in {en_cours: 'En cours', retard: 'En retard', rendus: 'Rendus', tous: 'Tous'} %}
+        <li class="nav-item">
+            <a class="nav-link {{ statut == cle ? 'active' }}" href="{{ path('app_emprunt_index', {statut: cle}) }}">{{ libelle }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Livre</th>
+                <th>Adhérent</th>
+                <th>Emprunté le</th>
+                <th>Retour prévu</th>
+                <th>Statut</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for emprunt in emprunts %}
+            <tr class="{{ emprunt.enRetard(aujourdhui) ? 'table-danger' }}">
+                <td><a href="{{ path('app_livre_show', {id: emprunt.livre.id}) }}" class="text-decoration-none">{{ emprunt.livre.titre }}</a></td>
+                <td><a href="{{ path('app_adherent_show', {id: emprunt.adherent.id}) }}" class="text-decoration-none">{{ emprunt.adherent.nomComplet }}</a></td>
+                <td>{{ emprunt.dateEmprunt|date('d/m/Y') }}</td>
+                <td>{{ emprunt.dateRetourPrevue|date('d/m/Y') }}</td>
+                <td>{{ include('_partials/_statut_emprunt.html.twig') }}</td>
+                <td class="text-end text-nowrap">
+                    {% if emprunt.enCours %}
+                        {{ include('emprunt/_retour_form.html.twig', {petit: true}) }}
+                    {% endif %}
+                    <a href="{{ path('app_emprunt_show', {id: emprunt.id}) }}" class="btn btn-sm btn-outline-secondary" title="Détails"><i class="bi bi-eye"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6" class="text-center text-body-secondary py-4">Aucun emprunt.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

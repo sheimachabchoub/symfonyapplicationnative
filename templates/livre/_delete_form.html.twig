@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_livre_delete', {'id': livre.id}) }}" onsubmit="return confirm('Supprimer définitivement ce livre ?');" class="d-grid">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+    <button class="btn btn-outline-danger"><i class="bi bi-trash"></i> Supprimer</button>
+</form>

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunt n°{{ emprunt.id }}{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-0">Emprunt n°{{ emprunt.id }}</h1>
+            {{ include('_partials/_statut_emprunt.html.twig') }}
+        </div>
+        <div class="bg-white rounded shadow-sm p-4">
+            <dl class="row mb-0">
+                <dt class="col-sm-5">Livre</dt>
+                <dd class="col-sm-7"><a href="{{ path('app_livre_show', {id: emprunt.livre.id}) }}">{{ emprunt.livre.titre }}</a></dd>
+                <dt class="col-sm-5">Adhérent</dt>
+                <dd class="col-sm-7"><a href="{{ path('app_adherent_show', {id: emprunt.adherent.id}) }}">{{ emprunt.adherent.nomComplet }}</a></dd>
+                <dt class="col-sm-5">Date d'emprunt</dt>
+                <dd class="col-sm-7">{{ emprunt.dateEmprunt|date('d/m/Y') }}</dd>
+                <dt class="col-sm-5">Retour prévu</dt>
+                <dd class="col-sm-7">{{ emprunt.dateRetourPrevue|date('d/m/Y') }}</dd>
+                <dt class="col-sm-5">Retour effectif</dt>
+                <dd class="col-sm-7">{{ emprunt.dateRetourReelle ? emprunt.dateRetourReelle|date('d/m/Y') : '—' }}</dd>
+            </dl>
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            {% if emprunt.enCours %}
+                {{ include('emprunt/_retour_form.html.twig') }}
+                <a href="{{ path('app_emprunt_edit', {id: emprunt.id}) }}" class="btn btn-outline-primary"><i class="bi bi-calendar-plus"></i> Prolonger</a>
+            {% endif %}
+            <form method="post" action="{{ path('app_emprunt_delete', {id: emprunt.id}) }}" class="ms-auto" onsubmit="return confirm('Supprimer cet emprunt de l\'historique ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ emprunt.id) }}">
+                <button class="btn btn-outline-danger"><i class="bi bi-trash"></i> Supprimer</button>
+            </form>
+        </div>
+        <a href="{{ path('app_emprunt_index') }}" class="btn btn-link mt-2 px-0"><i class="bi bi-arrow-left"></i> Retour aux emprunts</a>
+    </div>
+</div>
+{% endblock %}

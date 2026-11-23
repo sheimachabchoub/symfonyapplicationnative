@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ adherent.nomComplet }}{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h3 mb-3">Modifier {{ adherent.nomComplet }}</h1>
+        <div class="bg-white rounded shadow-sm p-4">
+            {{ include('adherent/_form.html.twig') }}
+        </div>
+        <a href="{{ path('app_adherent_show', {id: adherent.id}) }}" class="btn btn-link mt-2"><i class="bi bi-arrow-left"></i> Retour à la fiche</a>
+    </div>
+</div>
+{% endblock %}

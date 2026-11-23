@@ -18,3 +18,17 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> Fichiers d'autres cours, hors projet bibliothèque ###
+/atelier01_singleton/
+/chapitre5/
+/docx_qa/
+/Compte_rendu_pattern_*
+/build_rapport_adapter.py
+/build_velosf_report.py
+###< Fichiers d'autres cours ###
+
+# Documents Word temporaires
+~$*
+/docs/observer-agence-emploi/
+/docs/velosf/

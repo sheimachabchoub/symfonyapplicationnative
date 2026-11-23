@@ -1,0 +1,18 @@
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="row">
+        <div class="col-md-8">{{ form_row(form.titre) }}</div>
+        <div class="col-md-4">{{ form_row(form.isbn) }}</div>
+        <div class="col-md-6">{{ form_row(form.auteurs, {attr: {size: 6}}) }}</div>
+        <div class="col-md-6">
+            {{ form_row(form.category) }}
+            {{ form_row(form.editeur) }}
+        </div>
+        <div class="col-md-3">{{ form_row(form.dateEdition) }}</div>
+        <div class="col-md-3">{{ form_row(form.nbPages) }}</div>
+        <div class="col-md-3">{{ form_row(form.nbExemplaires) }}</div>
+        <div class="col-md-3">{{ form_row(form.prix) }}</div>
+        <div class="col-12">{{ form_row(form.resume) }}</div>
+    </div>
+    <button class="btn btn-primary"><i class="bi bi-check-lg"></i> {{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

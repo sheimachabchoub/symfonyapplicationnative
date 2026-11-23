@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prolonger l'emprunt{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-3">Prolonger l'emprunt</h1>
+        <div class="bg-white rounded shadow-sm p-4">
+            <p class="mb-3">« {{ emprunt.livre.titre }} » emprunté par {{ emprunt.adherent.nomComplet }} le {{ emprunt.dateEmprunt|date('d/m/Y') }}.</p>
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_row(form.dateRetourPrevue) }}
+                {{ form_rest(form) }}
+                <button class="btn btn-primary"><i class="bi bi-check-lg"></i> Enregistrer</button>
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('app_emprunt_show', {id: emprunt.id}) }}" class="btn btn-link mt-2"><i class="bi bi-arrow-left"></i> Retour</a>
+    </div>
+</div>
+{% endblock %}

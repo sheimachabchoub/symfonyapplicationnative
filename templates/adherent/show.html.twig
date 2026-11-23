@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ adherent.nomComplet }}{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_adherent_index') }}">Adhérents</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ adherent.nomComplet }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h4">{{ adherent.nomComplet }}</h1>
+                <p class="text-body-secondary mb-2">{{ adherent.email }}</p>
+                <span class="badge {{ adherent.admin ? 'text-bg-warning' : 'text-bg-light border' }}">{{ adherent.admin ? 'Bibliothécaire' : 'Adhérent' }}</span>
+                <p class="mt-3 mb-0">Emprunts encore possibles : <strong>{{ restants }}</strong></p>
+            </div>
+            <div class="card-footer bg-white d-flex gap-2">
+                <a href="{{ path('app_adherent_edit', {id: adherent.id}) }}" class="btn btn-outline-primary flex-grow-1"><i class="bi bi-pencil"></i> Modifier</a>
+                <form method="post" action="{{ path('app_adherent_delete', {id: adherent.id}) }}" onsubmit="return confirm('Supprimer ce compte ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ adherent.id) }}">
+                    <button class="btn btn-outline-danger" title="Supprimer"><i class="bi bi-trash"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <h2 class="h5">Historique des emprunts</h2>
+        <div class="table-responsive bg-white rounded shadow-sm">
+            <table class="table align-middle mb-0">
+                <thead class="table-light"><tr><th>Livre</th><th>Emprunté le</th><th>Retour prévu</th><th>Statut</th><th></th></tr></thead>
+                <tbody>
+                {% for emprunt in adherent.emprunts|sort((a, b) => b.dateEmprunt <=> a.dateEmprunt) %}
+                    <tr>
+                        <td>{{ emprunt.livre.titre }}</td>
+                        <td>{{ emprunt.dateEmprunt|date('d/m/Y') }}</td>
+                        <td>{{ emprunt.dateRetourPrevue|date('d/m/Y') }}</td>
+                        <td>{{ include('_partials/_statut_emprunt.html.twig') }}</td>
+                        <td class="text-end">
+                            {% if emprunt.enCours %}{{ include('emprunt/_retour_form.html.twig', {petit: true}) }}{% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5" class="text-center text-body-secondary py-3">Aucun emprunt.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

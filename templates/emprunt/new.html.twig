@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel emprunt{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <h1 class="h3 mb-3">Nouvel emprunt</h1>
+        <div class="alert alert-info small">
+            <i class="bi bi-info-circle"></i> Durée de prêt : {{ duree }} jours · maximum {{ max }} emprunts en cours par adhérent.
+        </div>
+        <div class="bg-white rounded shadow-sm p-4">
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_row(form.livre) }}
+                {{ form_row(form.adherent) }}
+                {{ form_row(form.dateRetourPrevue) }}
+                <button class="btn btn-primary"><i class="bi bi-check-lg"></i> Enregistrer l'emprunt</button>
+            {{ form_end(form) }}
+        </div>
+        <a href="{{ path('app_emprunt_index') }}" class="btn btn-link mt-2"><i class="bi bi-arrow-left"></i> Retour aux emprunts</a>
+    </div>
+</div>
+{% endblock %}

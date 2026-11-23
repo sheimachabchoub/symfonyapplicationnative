@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="p-4 p-md-5 mb-4 bg-white rounded-3 shadow-sm">
+    <h1 class="display-6 fw-semibold">Bienvenue à la bibliothèque</h1>
+    <p class="lead text-body-secondary">Cherchez un livre par titre, auteur ou catégorie.</p>
+    <form class="row g-2" action="{{ path('app_livre_index') }}" method="get">
+        <div class="col-md-7">
+            <input type="search" name="q" class="form-control form-control-lg" placeholder="Ex. : Victor Hugo, roman, Symfony…">
+        </div>
+        <div class="col-md-3">
+            <select name="categorie" class="form-select form-select-lg">
+                <option value="">Toutes les catégories</option>
+                {% for categorie in categories %}
+                    <option value="{{ categorie.id }}">{{ categorie.designation }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-primary btn-lg"><i class="bi bi-search"></i> Rechercher</button>
+        </div>
+    </form>
+</div>
+
+<h2 class="h4 mb-3">Derniers livres ajoutés</h2>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+    {% for livre in derniers %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h6 card-title"><a href="{{ path('app_livre_show', {id: livre.id}) }}" class="stretched-link text-decoration-none">{{ livre.titre }}</a></h3>
+                    <p class="card-text small text-body-secondary mb-1">{{ livre.auteurs|join(', ') ?: 'Auteur inconnu' }}</p>
+                    {% if livre.category %}<span class="badge text-bg-light border">{{ livre.category }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-body-secondary">Le catalogue est vide pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

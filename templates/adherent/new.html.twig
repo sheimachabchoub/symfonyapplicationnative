@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel adhérent{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="h3 mb-3">Nouvel adhérent</h1>
+        <div class="bg-white rounded shadow-sm p-4">
+            {{ include('adherent/_form.html.twig', {button_label: 'Créer le compte'}) }}
+        </div>
+        <a href="{{ path('app_adherent_index') }}" class="btn btn-link mt-2"><i class="bi bi-arrow-left"></i> Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}

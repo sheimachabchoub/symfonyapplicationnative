@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0"><i class="bi bi-book"></i> Catalogue</h1>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_livre_new') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nouveau livre</a>
+    {% endif %}
+</div>
+
+<form class="row g-2 mb-4" method="get" action="{{ path('app_livre_index') }}">
+    <div class="col-md-6">
+        <input type="search" name="q" value="{{ search.q }}" class="form-control" placeholder="Titre, auteur ou catégorie">
+    </div>
+    <div class="col-md-4">
+        <select name="categorie" class="form-select">
+            <option value="">Toutes les catégories</option>
+            {% for categorie in categories %}
+                <option value="{{ categorie.id }}" {{ search.categorie == categorie.id ? 'selected' }}>{{ categorie.designation }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2 d-flex gap-2">
+        <button class="btn btn-outline-primary flex-grow-1"><i class="bi bi-search"></i> Chercher</button>
+        {% if not search.empty %}
+            <a href="{{ path('app_livre_index') }}" class="btn btn-outline-secondary" title="Effacer la recherche"><i class="bi bi-x-lg"></i></a>
+        {% endif %}
+    </div>
+</form>
+
+<p class="text-body-secondary small">{{ livres|length }} livre{{ livres|length > 1 ? 's' }}{{ not search.empty ? ' trouvé' ~ (livres|length > 1 ? 's') }}</p>
+
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Titre</th>
+                <th>Auteur(s)</th>
+                <th>Catégorie</th>
+                <th class="text-center">Année</th>
+                <th class="text-center">Disponibilité</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for livre in livres %}
+            {% set dispo = disponibles[livre.id] %}
+            <tr>
+                <td><a href="{{ path('app_livre_show', {id: livre.id}) }}" class="fw-semibold text-decoration-none">{{ livre.titre }}</a><br><small class="text-body-secondary">ISBN {{ livre.isbn }}</small></td>
+                <td>{{ livre.auteurs|join(', ') }}</td>
+                <td>{{ livre.category ?? '—' }}</td>
+                <td class="text-center">{{ livre.dateEdition|date('Y') }}</td>
+                <td class="text-center">
+                    {% if dispo > 0 %}
+                        <span class="badge text-bg-success">{{ dispo }} / {{ livre.nbExemplaires }}</span>
+                    {% else %}
+                        <span class="badge text-bg-danger">Indisponible</span>
+                    {% endif %}
+                </td>
+                <td class="text-end text-nowrap">
+                    <a href="{{ path('app_livre_show', {id: livre.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir"><i class="bi bi-eye"></i></a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_livre_edit', {id: livre.id}) }}" class="btn btn-sm btn-outline-primary" title="Modifier"><i class="bi bi-pencil"></i></a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6" class="text-center text-body-secondary py-4">Aucun livre ne correspond à votre recherche.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

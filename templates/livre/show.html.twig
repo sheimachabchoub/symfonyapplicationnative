@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ livre.titre }}{% endblock %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Catalogue</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ livre.titre }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="bg-white rounded shadow-sm p-4">
+            <h1 class="h3">{{ livre.titre }}</h1>
+            <p class="text-body-secondary">{{ livre.auteurs|join(', ') ?: 'Auteur inconnu' }}</p>
+            {% if livre.resume %}
+                <h2 class="h6 mt-4">Résumé</h2>
+                <p class="livre-resume">{{ livre.resume }}</p>
+            {% endif %}
+            <dl class="row mt-4 mb-0">
+                <dt class="col-sm-4">ISBN</dt><dd class="col-sm-8">{{ livre.isbn }}</dd>
+                <dt class="col-sm-4">Catégorie</dt><dd class="col-sm-8">{{ livre.category ?? '—' }}</dd>
+                <dt class="col-sm-4">Éditeur</dt><dd class="col-sm-8">{{ livre.editeur }}</dd>
+                <dt class="col-sm-4">Date d'édition</dt><dd class="col-sm-8">{{ livre.dateEdition|date('d/m/Y') }}</dd>
+                <dt class="col-sm-4">Pages</dt><dd class="col-sm-8">{{ livre.nbPages }}</dd>
+                <dt class="col-sm-4">Prix</dt><dd class="col-sm-8">{{ livre.prix|number_format(3, ',', ' ') }} TND</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h6">Disponibilité</h2>
+                <p class="display-6 mb-1 {{ disponibles > 0 ? 'text-success' : 'text-danger' }}">{{ disponibles }} <span class="fs-6 text-body-secondary">/ {{ livre.nbExemplaires }} exemplaire{{ livre.nbExemplaires > 1 ? 's' }}</span></p>
+                <p class="small text-body-secondary mb-0">{{ disponibles > 0 ? 'Disponible au prêt.' : 'Tous les exemplaires sont empruntés.' }}</p>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="card-footer bg-white d-grid gap-2">
+                    {% if disponibles > 0 %}
+                        <a href="{{ path('app_emprunt_new', {livre: livre.id}) }}" class="btn btn-success"><i class="bi bi-box-arrow-up-right"></i> Prêter ce livre</a>
+                    {% endif %}
+                    <a href="{{ path('app_livre_edit', {id: livre.id}) }}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Modifier</a>
+                    {{ include('livre/_delete_form.html.twig') }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

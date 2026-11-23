@@ -1,3 +1,2 @@
-body {
-    background-color: skyblue;
-}
+/* Styles propres à l'application (le thème vient de Bootstrap) */
+.livre-resume { white-space: pre-line; }

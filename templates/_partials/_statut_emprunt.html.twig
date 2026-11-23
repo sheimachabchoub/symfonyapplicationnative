@@ -1,0 +1,8 @@
+{# Badge de statut d'un emprunt. Variables : emprunt, aujourdhui #}
+{% if not emprunt.enCours %}
+    <span class="badge text-bg-secondary">Rendu le {{ emprunt.dateRetourReelle|date('d/m/Y') }}</span>
+{% elseif emprunt.enRetard(aujourdhui) %}
+    <span class="badge text-bg-danger">En retard ({{ emprunt.joursDeRetard(aujourdhui) }} j)</span>
+{% else %}
+    <span class="badge text-bg-success">En cours</span>
+{% endif %}
