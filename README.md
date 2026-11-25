@@ -208,6 +208,29 @@ php bin/console messenger:consume async -vv
 
 ---
 
+## 📚 Données de test
+
+Pour remplir la bibliothèque avec un jeu de données réaliste ([`src/DataFixtures/AppFixtures.php`](src/DataFixtures/AppFixtures.php)) :
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+> ⚠️ Cette commande **vide la base** avant de la remplir. Utilisez-la sur une base de développement.
+
+| Contenu | Quantité |
+|---|---|
+| Livres (ISBN-13 valides) | 36 : classiques français, littérature tunisienne, informatique |
+| Auteurs | 18 (Hugo, Zola, Camus, Memmi, Chebbi, Fabien Potencier…) |
+| Catégories / éditeurs | 8 / 9 |
+| Comptes | 1 bibliothécaire (`biblio@biblio.tn`) + 8 adhérents (`sami.benali@biblio.tn`…) |
+| Emprunts | 22 : en cours, bientôt à rendre, **en retard**, rendus (dates calculées à partir d'aujourd'hui) |
+| Personnes (exercice) | 12 |
+
+Tous les comptes de test ont le même mot de passe, défini dans `AppFixtures::MOT_DE_PASSE`. Ce jeu alimente aussi les 7 exercices JSON `/test/livres/{1-7}` (dont les livres de Fabien Potencier pour l'exercice 7).
+
+---
+
 ## 🧭 Pages principales
 
 | Page | URL | Accès |
@@ -265,6 +288,7 @@ php bin/phpunit
 |---|---|---|
 | Service | `tests/Service/EmpruntServiceTest.php` | Dates de prêt, disponibilité, plafond, retour, détection des retards |
 | Fonctionnel | `tests/Controller/BibliothequeControllerTest.php` | Recherche, contrôle d'accès, connexion, prêt et retour, tableau de bord, back-office |
+| Toutes les routes | `tests/Controller/ToutesLesRoutesTest.php` | Avec le jeu de données : **chaque page GET** pour un visiteur, un adhérent et le bibliothécaire (aucune erreur, bons droits d'accès) ; les **7 API JSON** `/test/livres/{1-7}` et `/somme/{a}/{b}` ; création, modification et suppression de chaque entité ; prêt, retour et plafond de 3 emprunts ; connexion et déconnexion |
 
 Chaque nouvelle fonctionnalité est livrée avec un test qui l'exerce comme un utilisateur réel : une requête HTTP pour un contrôleur, un appel de service pour un service.
 
